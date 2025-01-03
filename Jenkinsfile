@@ -2,48 +2,53 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = 'docker-cred' // Jenkins credentials ID
+        GIT_REPO = 'https://github.com/manishsalona/slab-AI.git'
+        DOCKER_CRED_ID = 'docker-cred'
         DOCKERHUB_USERNAME = 'salona1993'
-        DOCKERHUB_REPO = 'slab-ai'            // Predefined Docker Hub repository
-
+        DOCKERHUB_REPO = 'slab-ai'
+        DOCKER_AUTH_SERVICE = './backend/paymentService'
+        DOCKER_BASE_SRVICE = './backend/projectService'
+        DOCKER_CALCULATION_SERVICE = './backend/calculationService'
+        DOCKER_API_SERVICE = './backend/userService'
+        
     }
 
     stages {
-        stage('Build and Push Microservices') {
+        stage('Clone the source code') {
+            steps {
+                git branch: 'main', url: "${env.GIT_REPO}"
+            }
+        }
+        stage('Build the docker images auth service'){
             steps {
                 script {
-                    // List of microservices
-                    def services = ['backend/paymentService', 'backend/projectService','backend/userService']
-
-                    // Loop through each service
-                    services.each { service ->
-                        dir("${service}") { // Enter the service directory
-                            echo "Building and Pushing Docker Image for ${service}"
-
-                            def imageTag = "${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}/${service.toLowerCase()}:${env.BUILD_NUMBER}"
-
-                            // Build Docker image
-                            sh "sudo docker build -t ${imageTag} ."
-
-                            // Login to Docker Hub
-                            withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                                sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
-                            }
-
-                            // Push Docker image to Docker Hub
-                            sh "sudo docker push ${imageTag}"
-                        }
-                    }
+                    docker.build("${env.DOCKERHUB_USERNAME}/${env.DOCKERHUB_REPO}:payment-service-${env.BUILD_ID}", "${env.DOCKER_AUTH_SERVICE}")
                 }
             }
         }
-    }
-
-    post {
-        always {
-            script {
-                // Clean up Docker images after the build
-                sh "docker system prune -f || true"
+        stage('Build the docker images base service'){
+            steps {
+                script {
+                    docker.build("${env.DOCKERHUB_USERNAME}/${env.DOCKERHUB_REPO}:project-service-${env.BUILD_ID}", "${env.DOCKER_BASE_SRVICE}")
+                }
+            }
+        }
+        stage('Build the docker images base service'){
+            steps {
+                script {
+                    docker.build("${env.DOCKERHUB_USERNAME}/${env.DOCKERHUB_REPO}:user-service-${env.BUILD_ID}", "${env.DOCKER_BASE_SRVICE}")
+                }
+            }
+        }
+        stage('Push the Image to DockerHub Repository') {
+            steps {
+                script {
+                    docker.withRegistry('', "${env.DOCKER_CRED_ID}") {
+                        docker.image("${env.DOCKERHUB_USERNAME}/${env.DOCKERHUB_REPO}:payment-service-${env.BUILD_ID}").push()
+                        docker.image("${env.DOCKERHUB_USERNAME}/${env.DOCKERHUB_REPO}:project-service-${env.BUILD_ID}").push()
+                        docker.image("${env.DOCKERHUB_USERNAME}/${env.DOCKERHUB_REPO}:user-service-${env.BUILD_ID}").push()
+                    }
+                }
             }
         }
     }
