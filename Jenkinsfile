@@ -11,7 +11,7 @@ pipeline {
         stage('Build and Push paymentService') {
             steps {
                 script {
-                    def imageTag = "${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}/paymentservice:${env.BUILD_NUMBER}"
+                    def imageTag = "${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}:paymentservice:${env.BUILD_NUMBER}"
                     
                     // Build Docker image
                     sh """
@@ -33,7 +33,7 @@ pipeline {
         stage('Build and Push projectService') {
             steps {
                 script {
-                    def imageTag = "${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}/projectservice:${env.BUILD_NUMBER}"
+                    def imageTag = "${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}:projectservice:${env.BUILD_NUMBER}"
                     
                     // Build Docker image
                     sh """
@@ -55,7 +55,7 @@ pipeline {
         stage('Build and Push userService') {
             steps {
                 script {
-                    def imageTag = "${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}/userservice:${env.BUILD_NUMBER}"
+                    def imageTag = "${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}:userservice:${env.BUILD_NUMBER}"
                     
                     // Build Docker image
                     sh """
