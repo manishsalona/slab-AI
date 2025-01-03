@@ -19,21 +19,21 @@ pipeline {
                 git branch: 'main', url: "${env.GIT_REPO}"
             }
         }
-        stage('Build the docker images auth service'){
+        stage('Build the docker images payment service'){
             steps {
                 script {
                     docker.build("${env.DOCKERHUB_USERNAME}/${env.DOCKERHUB_REPO}:payment-service-${env.BUILD_ID}", "${env.DOCKER_AUTH_SERVICE}")
                 }
             }
         }
-        stage('Build the docker images base service'){
+        stage('Build the docker images project service'){
             steps {
                 script {
                     docker.build("${env.DOCKERHUB_USERNAME}/${env.DOCKERHUB_REPO}:project-service-${env.BUILD_ID}", "${env.DOCKER_BASE_SRVICE}")
                 }
             }
         }
-        stage('Build the docker images base service'){
+        stage('Build the docker images user service'){
             steps {
                 script {
                     docker.build("${env.DOCKERHUB_USERNAME}/${env.DOCKERHUB_REPO}:user-service-${env.BUILD_ID}", "${env.DOCKER_BASE_SRVICE}")
