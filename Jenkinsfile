@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = 'docker-cred' // Jenkins credentials ID
         DOCKERHUB_USERNAME = 'salona1993'
-        DOCKERHUB_REPO = 'salona1993/slab-ai'            // Predefined Docker Hub repository
+        DOCKERHUB_REPO = 'slab-ai'            // Predefined Docker Hub repository
 
     }
 
