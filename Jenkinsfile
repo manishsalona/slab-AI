@@ -21,7 +21,7 @@ pipeline {
                             def imageTag = "${DOCKERHUB_USERNAME}/${service.toLowerCase()}:${env.BUILD_NUMBER}"
 
                             // Build Docker image
-                            sh "docker build -t ${imageTag} ."
+                            sh "sudo docker build -t ${imageTag} ."
 
                             // Login to Docker Hub
                             withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
@@ -29,7 +29,7 @@ pipeline {
                             }
 
                             // Push Docker image to Docker Hub
-                            sh "docker push ${imageTag}"
+                            sh "sudo docker push ${imageTag}"
                         }
                     }
                 }
