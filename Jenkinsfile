@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                     // List of microservices
-                    def services = ['paymentService', 'userService', 'projectService']
+                    def services = ['backend/paymentService', 'backend/projectService','backend/userService']
 
                     // Loop through each service
                     services.each { service ->
