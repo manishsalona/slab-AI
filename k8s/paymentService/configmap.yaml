@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-service-config
+  namespace: default
+data:
+  PORT: "3003"
+  AWS_REGION: "ap-south-1"
+  S3_BUCKET_NAME: "slabai"

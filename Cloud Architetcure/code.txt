@@ -1,0 +1,56 @@
+// Define groups and nodes
+User [icon: user] 
+Route 53 [icon: aws-route-53]
+Load Balancer [icon: aws-alb]
+
+VPC [icon: aws-vpc] {
+
+  Public Subnet [icon: aws-subnet] {
+    Load Balancer [icon: aws-alb]
+    Infrastructure Management [icon: terraform] {
+    Terraform [icon: terraform]
+    State Storage [icon: aws-s3]
+    }
+    Monitoring [icon: prometheus] {
+    Prometheus [icon: prometheus]
+    Grafana [icon: grafana]
+    CloudWatch [icon: aws-cloudwatch]
+    }
+
+    CI/CD Pipeline [icon: jenkins] {
+    Jenkins [icon: jenkins]
+    Docker Registry [icon: aws-ecr]
+    Source Code Repository [icon: github]
+    }
+
+  }
+
+  Private Subnet [icon: aws-subnet] {
+    EKS Cluster [icon: aws-eks] {
+      Control Plane [icon: aws-eks]
+      Worker Nodes {
+        Worker1 [icon: aws-ec2]
+        Worker2 [icon: aws-ec2]
+        Worker3 [icon: aws-ec2]
+      }
+    }
+
+    Storage [icon: aws-efs] {
+      EFS [icon: aws-efs]
+      S3 [icon: aws-simple-storage-service]
+    }
+  }
+}
+
+
+
+// Define connections
+User > Route 53 > Public Subnet > Load Balancer > Private Subnet > EKS Cluster > Worker Nodes
+Jenkins > Terraform > EKS Cluster
+Terraform > State Storage
+Source Code Repository > Jenkins > Docker Registry
+Prometheus > EKS Cluster
+Grafana > Prometheus
+CloudWatch > EKS Cluster
+EFS > Worker Nodes
+S3 > EKS Cluster

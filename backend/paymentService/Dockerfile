@@ -8,8 +8,10 @@ RUN npm install --production
 
 COPY . .
 
-EXPOSE 3002
+EXPOSE 3003
 
-ENV PORT=3002
+ENV PORT=${PORT}
+ENV MONGO_URI=${MONGO_URI}
 
 CMD [ "node", "index.js" ]
+ 

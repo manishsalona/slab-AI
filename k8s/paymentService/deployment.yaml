@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-service
+  template:
+    metadata:
+      labels:
+        app: payment-service
+    spec:
+      containers:
+      - name: payment-service
+        image: your-payment-service-image:latest
+        ports:
+        - containerPort: 3003
+        env:
+        # From ConfigMap
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: payment-service-config
+              key: PORT
+        - name: AWS_REGION
+          valueFrom:
+            configMapKeyRef:
+              name: payment-service-config
+              key: AWS_REGION
+        - name: S3_BUCKET_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: payment-service-config
+              key: S3_BUCKET_NAME
+        # From Secret
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: payment-service-secrets
+              key: MONGO_URI
+        - name: RAZORPAY_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: payment-service-secrets
+              key: RAZORPAY_KEY_ID
+        - name: RAZORPAY_KEY_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: payment-service-secrets
+              key: RAZORPAY_KEY_SECRET
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: payment-service-secrets
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: payment-service-secrets
+              key: AWS_SECRET_ACCESS_KEY
