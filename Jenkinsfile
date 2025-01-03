@@ -4,6 +4,8 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = 'docker-cred' // Jenkins credentials ID
         DOCKERHUB_USERNAME = 'salona1993'
+        DOCKERHUB_REPO = 'salona1993/slab-ai'            // Predefined Docker Hub repository
+
     }
 
     stages {
@@ -18,7 +20,7 @@ pipeline {
                         dir("${service}") { // Enter the service directory
                             echo "Building and Pushing Docker Image for ${service}"
 
-                            def imageTag = "${DOCKERHUB_USERNAME}/${service.toLowerCase()}:${env.BUILD_NUMBER}"
+                            def imageTag = "${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}/${service.toLowerCase()}:${env.BUILD_NUMBER}"
 
                             // Build Docker image
                             sh "sudo docker build -t ${imageTag} ."
